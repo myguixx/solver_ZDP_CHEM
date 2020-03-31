@@ -4,7 +4,7 @@
 OPTION = -O0 -Wall -Wextra
 
 CC    := gfortran
-ALL_O := $(patsubst src/senkin/%.f,obj/%.o,$(wildcard src/senkin/*.f))
+ALL_O := $(patsubst src/senkin/%.f,src/senkin/%.o,$(wildcard src/senkin/*.f))
 
 senkine: $(ALL_O)
 	$(CC) $(OPTION) $^ -o $@
