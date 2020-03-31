@@ -39,15 +39,15 @@ C      IF (LEXIST) OPEN (LREST,STATUS='OLD',FORM='UNFORMATTED')
 C*****END vms
 C
 C*****unix
-      OPEN (LINKCK, FORM='UNFORMATTED', FILE='cklink')
-      OPEN (LSAVE, FORM='UNFORMATTED', FILE ='save')
-      OPEN (LOUT, FORM='FORMATTED', FILE='terminalout')
-      OPEN (LIGN, FORM='FORMATTED', FILE = 'skout')
-      OPEN (LIN, FORM='FORMATTED', FILE='inp')
-      INQUIRE (FILE='restart', EXIST=LEXIST)
+      OPEN (LINKCK, FORM='UNFORMATTED', FILE='data/cklink')
+      OPEN (LSAVE, FORM='UNFORMATTED', FILE ='output/save')
+      OPEN (LOUT, FORM='FORMATTED', FILE='output/terminalout')
+      OPEN (LIGN, FORM='FORMATTED', FILE = 'output/skout')
+      OPEN (LIN, FORM='FORMATTED', FILE='input/inp')
+      INQUIRE (FILE='output/restart', EXIST=LEXIST)
       IF (LEXIST) THEN 
         OPEN (LREST, FORM='UNFORMATTED',
-     1        FILE='restart')
+     1        FILE='output/restart')
       ENDIF
 C*****END unix
 C

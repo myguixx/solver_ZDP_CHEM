@@ -434,7 +434,7 @@ C
 C       SET OUTPUT FILE FOR USER COMFORMATION
 C
       LDTS = 11
-      OPEN (LDTS, FORM='FORMATTED', FILE = 'skout_datasheet')
+      OPEN (LDTS, FORM='FORMATTED', FILE = 'output/skout_datasheet')
 C
 C       SET PARAMETERS FOR DASAC
 C
