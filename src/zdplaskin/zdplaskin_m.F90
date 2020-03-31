@@ -69,7 +69,7 @@ module ZDPlasKin
   double precision, private                 :: bolsig_eecol_frac
   integer, parameter, private               :: bolsig_species_max = 20, bolsig_species_length = 7, bolsig_rates_max = 106, &
                                                bolsig_addsect_max = 10 
-  character(*), parameter, private          :: bolsigfile = "bolsigdb.dat"
+  character(*), parameter, private          :: bolsigfile = "data/bolsigdb.dat"
   integer                                   :: bolsig_pointer(bolsig_rates_max) = -1
   integer, private                          :: bolsig_species_index(bolsig_species_max) = -1, bolsig_collisions_max = 0, &
                                                bolsig_addsect(2,bolsig_addsect_max) 

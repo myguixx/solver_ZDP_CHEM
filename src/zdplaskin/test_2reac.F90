@@ -38,7 +38,7 @@ program test_2reac
 ! initialization of ZDPlasKin
 !
   call ZDPlasKin_init()
-  call ZDPlaskin_set_config(QTPLASKIN_SAVE=.true.) ! auto save in QtPlaskin format
+  call ZDPlaskin_set_config(QTPLASKIN_SAVE=.false.) ! auto save in QtPlaskin format
 !
 ! set the physical conditions of the calculation:
 !     the gas temperature and the reduced electric field
