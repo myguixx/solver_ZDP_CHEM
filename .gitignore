@@ -1,3 +1,6 @@
 *.o
 senkine
 output/*
+
+*.log
+*.mod
