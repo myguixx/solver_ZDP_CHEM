@@ -4,12 +4,13 @@ program test_2reac
   use ZDPlasKin
   implicit none
   double precision, parameter :: gas_temperature_K  = 800.0d0,  & 
-                                 density_ini_nh3   = 2.01E+18,  &
-                                 density_ini_o2    = 1.51E+18,  &
-                                 density_ini_n2    = 5.66E+18,  &
-                                 density_ini_elec  = 9.17E-02,  &
+                                 density_ini_nh3   = 2.01d+18,  &
+                                 density_ini_o2    = 1.51d+18,  &
+                                 density_ini_n2    = 5.66d+18,  &
+                                 density_ini_elec  = 9.17d-02,  &
                                  reduced_field_Td  = 100d0,     &
                                  spec_heat_ratio   = 7.d0/5.d0
+  double precision            :: time  = 0.0d0, dtime = 1.0d-10
   integer                     :: i, j, unit_stm = 10
   logical                     :: gas_heating      = .true.
 
@@ -29,16 +30,18 @@ program test_2reac
 	
 
   ! Flag for qt-style output
-  call ZDPlaskin_set_config(QTPLASKIN_SAVE=.false.)
+  ! call ZDPlaskin_set_config(QTPLASKIN_SAVE=.true.)
 
   ! print column headers and initial values
   write(*,'(4(A12))') ( trim(species_name(i)), i = 1, species_max )
   write(*,'(4(1pe12.4))') density(:)
 
   call ZDPlasKin_get_rates(SOURCE_TERMS_MATRIX=source_terms_matrix)
-  
+
   do i = 1, species_max
     write(unit_stm, *) (source_terms_matrix(i, j), j = 1, reactions_max)
   enddo
+
+  ! call ZDPlasKin_timestep(time,dtime)
 
 end program test_2reac
