@@ -5,13 +5,17 @@ OPTION = -O0 -Wall -Wextra
 DEBAG = -g
 
 CC    := gfortran
-ALL_O := $(patsubst src/senkin/%.f,src/senkin/%.o,$(wildcard src/senkin/*.f))
+ALL_O := $(patsubst src/zdplaskin/%.F90,src/zdplaskin/%.o,$(wildcard src/zdplaskin/*.F90))
 
-senkine: $(ALL_O)
-	$(CC) $(OPTION) $(DEBAG) $^ -o $@
-
-%.o: %.f
+zdplaskine: $(ALL_O)
+	$(CC) $(OPTION) $(DEBAG) $^ src/zdplaskin/bolsig_x86_64.so -o $@
+%.o: %.F90
 	$(CC) $(OPTION) $(DEBAG) -c $< -o $@
+
+# senkine: $(ALL_O)
+# 	$(CC) $(OPTION) $(DEBAG) $^ -o $@
+# %.o: %.f
+# 	$(CC) $(OPTION) $(DEBAG) -c $< -o $@
 
 .PHONY: clean
 clean :
