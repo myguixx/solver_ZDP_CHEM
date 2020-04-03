@@ -1,4 +1,4 @@
 *.o
 zdp_chem
 output/*
-data/bolsig.log
+data/bolsigdb.log
