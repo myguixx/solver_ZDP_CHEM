@@ -1,3 +1,4 @@
 *.o
 senkine
 output/*
+data/bolsig.log
