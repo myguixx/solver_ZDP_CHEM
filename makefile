@@ -16,16 +16,7 @@ $(TARGET): $(SKN_O) $(ZDP_O)
 %.o: %.f
 	$(CC) $(OPTION) $(DEBAG) -c $< -o $@
 
-.PHONY: clean
-clean :
-	rm $(TARGET) $(SKN_O)
-
-
-
 .SUFFIXES: .F90
-
-# $(TARGET): $(OBJS)
-# 	$(CC) $(OPTION) $(DEBAG) $^ src/zdplaskin/bolsig_x86_64.so -o $@
 
 %.o: %.F90
 	$(CC) $(OPTION) $(DEBAG) -c $< -o $@
@@ -33,6 +24,6 @@ clean :
 %.mod: %.F90 %.o
     @:
 
-# .PHONY: clean
-# clean :
-# 	rm $(TARGET) $(OBJS) $(MODS)
+.PHONY: clean
+clean :
+	rm $(TARGET) $(SKN_O) $(ZDP_O) $(ZDP_M)
