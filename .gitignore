@@ -1,4 +1,8 @@
 *.o
+*.mod
 zdp_chem
-output/*
+output/save
+output/skout
+output/skout_datasheet
+output/terminalout
 data/bolsigdb.log
