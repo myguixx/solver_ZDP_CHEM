@@ -1,4 +1,4 @@
-program test_2reac
+program calc_rop
 
   ! declare variables and modules
   use ZDPlasKin
@@ -10,9 +10,9 @@ program test_2reac
                                  density_ini_elec  = 9.17d-02,  &
                                  reduced_field_Td  = 100d0,     &
                                  spec_heat_ratio   = 7.d0/5.d0
-  double precision            :: time  = 0.0d0, dtime = 1.0d-10
+  ! double precision            :: time  = 0.0d0, dtime = 1.0d-10
   integer                     :: i, j, unit_stm = 10
-  logical                     :: gas_heating      = .true.
+  ! logical                     :: gas_heating      = .true.
 
   double precision,dimension(species_max, reactions_max)  :: source_terms_matrix
   open(unit_stm, file='output/source_terms_matrix', form='formatted')
@@ -21,7 +21,7 @@ program test_2reac
 
   ! Set intial conditions
   call ZDPlasKin_set_conditions(GAS_TEMPERATURE=gas_temperature_K, REDUCED_FIELD=reduced_field_Td )
-  call ZDPlasKin_set_conditions(SPEC_HEAT_RATIO=spec_heat_ratio, GAS_HEATING=gas_heating )
+  ! call ZDPlasKin_set_conditions(SPEC_HEAT_RATIO=spec_heat_ratio, GAS_HEATING=gas_heating )
   call ZDPlasKin_set_density( 'NH3', density_ini_nh3)
   call ZDPlasKin_set_density(  'O2', density_ini_o2)
   call ZDPlasKin_set_density(  'N2', density_ini_n2)
@@ -38,10 +38,13 @@ program test_2reac
 
   call ZDPlasKin_get_rates(SOURCE_TERMS_MATRIX=source_terms_matrix)
 
-  do i = 1, species_max
-    write(unit_stm, *) (source_terms_matrix(i, j), j = 1, reactions_max)
-  enddo
+  ! do i = 1, species_max
+  !   write(unit_stm, *) (source_terms_matrix(i, j), j = 1, reactions_max)
+  ! enddo
+
+  print*, 'aaa'
+  write(unit_stm, *) sum(source_terms_matrix, dim=2)
 
   ! call ZDPlasKin_timestep(time,dtime)
 
-end program test_2reac
+end program calc_rop
