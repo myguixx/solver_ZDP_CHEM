@@ -1,4 +1,4 @@
 *.o
-senkine
+zdp_chem
 output/*
 data/bolsig.log
