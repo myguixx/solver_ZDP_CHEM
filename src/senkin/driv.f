@@ -11,7 +11,7 @@ C*****END SINGLE PRECISION
       DIMENSION IWORK (LENIWK), RWORK (LENRWK)
       LOGICAL LEXIST
       CHARACTER CWORK(LENCWK)*(LENSYM)
-      DATA LIN/5/, LOUT/6/, LINKCK/25/, LSAVE/7/, LIGN/9/, LREST/10/
+      DATA LIN/15/, LOUT/16/, LINKCK/25/, LSAVE/7/, LIGN/9/, LREST/10/
 C
 C     LIN    = Unit number for Keyword input
 C     LOUT   = Unit number for text output to terminal
@@ -69,3 +69,4 @@ C
       RETURN
       END
 
+      
