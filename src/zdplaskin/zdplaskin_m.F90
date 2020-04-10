@@ -68,7 +68,7 @@ module ZDPlasKin
                                                bolsig_eecol_frac_def = 1.00D-05
   double precision, private                 :: bolsig_eecol_frac
   integer, parameter, private               :: bolsig_species_max = 3, bolsig_species_length = 3, bolsig_rates_max = 15 
-  character(*), parameter, private          :: bolsigfile = "bolsigdb.dat"
+  character(*), parameter, private          :: bolsigfile = "data/bolsigdb.dat"
   integer                                   :: bolsig_pointer(bolsig_rates_max) = -1
   integer, private                          :: bolsig_species_index(bolsig_species_max) = -1, bolsig_collisions_max = 0 
   logical, private                          :: lbolsig_ignore_gas_temp, lbolsig_Maxwell_EEDF
