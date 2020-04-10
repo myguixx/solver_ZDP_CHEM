@@ -177,7 +177,7 @@ C
      1          RTOL(*), ATOL(*), RPAR(*), IPAR(*), TOLS(4)
       CHARACTER*(*) CCKWRK(*), KSYM(*)
 C
-      EXTERNAL RCONP, RCONV, RCONT, RVOLT, RTEMP
+      EXTERNAL RCONP_CHEM, RCONV, RCONT, RVOLT, RTEMP
 C
       LOGICAL LSENS, RESTRT, IERR
 C
@@ -359,7 +359,7 @@ C
 C        INTEGRATION ROUTINE TO RUN PROBLEM
 C
       IF (ICASE .EQ. 1) THEN
-         CALL SENS13 (RCONP, ICASE, NSYS, KK, II, DELT, TSTOP, TIM,
+         CALL SENS13 (RCONP_CHEM, ICASE, NSYS, KK, II, DELT, TSTOP, TIM,
      1                PATM, TLIM, LOUT, LSAVE, LIGN, LSENS, LIDAS,
      2                LRDAS, LSDAS, Z, ZP, DWORK, IDWORK, SDWORK, RPAR,
      3                IPAR, ATOL, RTOL, TOLS, XMOL, KSYM)
@@ -879,7 +879,7 @@ C
 C
 C---------------------------------------------------------------
 C
-      SUBROUTINE RCONP (TIME, Z, ZP, DELTA, IRES, RPAR, IPAR)
+      SUBROUTINE RCONP_CHEM (TIME, Z, ZP, DELTA, IRES, RPAR, IPAR)
 C
 C*****precision > double
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
@@ -925,7 +925,7 @@ C
      1             RPAR(IPWDOT))
       CALL CKHMS  (Z(1), IPAR(IPICK), RPAR(IPRCK), RPAR(IPH))
       IF (RHO .EQ. 0.0) THEN
-         WRITE (LOUT, '(/1X,A)') 'Stop, zero density in RCONP.'
+         WRITE (LOUT, '(/1X,A)') 'Stop, zero density in RCONP_CHEM.'
          STOP
       ENDIF
       VOLSP = 1. / RHO
