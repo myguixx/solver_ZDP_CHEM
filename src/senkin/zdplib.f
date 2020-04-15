@@ -1,15 +1,22 @@
+      SUBROUTINE ZDPINIT()
+      use ZDPlasKin
+
+      OPEN (17, FORM='FORMATTED', FILE = 'output/zdpout')
+
+      call ZDPlasKin_init()
+
+      RETURN
+      END
+C
+C---------------------------------------------------------------
+C
       SUBROUTINE RCONP_ZDP (TIME, Z, ZP, DELTA, IRES, RPAR, IPAR)
       use ZDPlasKin
-C
-C*****precision > double
+
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
-C*****END precision > double
-C*****precision > single
-C      IMPLICIT REAL (A-H, O-Z), INTEGER (I-N)
-C*****END precision > single
-C
-      DIMENSION Z(*), ZP(*), DELTA(*), RPAR(*), IPAR(*)
-C
+      LOGICAL gas_heating
+      DIMENSION Z(*), ZP(*), DELTA(*), RPAR(*), IPAR(*),
+     1          source_terms_species(83)
       COMMON /RES1/ P
 C
 C  Residual of differential equations for constant pressure case
@@ -66,31 +73,32 @@ C
          DELTA(K+1) = ZP(K+1) - RPAR(IPWDOT+K1) *RPAR(IPWT+K1) *VOLSP
  200  CONTINUE
 
+C ---------- ZDPlasKin ----------
+
       ! Set intial conditions
-      reduced_field_Td = 100
-      gas_temperature_K = 800.0d0
+      reduced_field_Td = 180.d0
+      gas_temperature_K = 296.0d0
       call ZDPlasKin_set_conditions(GAS_TEMPERATURE=gas_temperature_K,
      1                              REDUCED_FIELD=reduced_field_Td)
 
       ! call ZDPlasKin_set_conditions(SPEC_HEAT_RATIO=spec_heat_ratio, GAS_HEATING=gas_heating )
-      density_ini_ch4  = 2.01d+18
-      density_ini_o2   = 1.51d+18
-      density_ini_n2   = 5.66d+18
-      density_ini_elec = 9.17d-02
-      call ZDPlasKin_set_density( 'CH4', density_ini_ch4)
-      call ZDPlasKin_set_density(  'O2', density_ini_o2)
-      call ZDPlasKin_set_density(  'N2', density_ini_n2)
-      call ZDPlasKin_set_density(   'e', density_ini_elec)
-C
-      RETURN
-      END
-C
-C---------------------------------------------------------------
-C
-      SUBROUTINE ZDPINIT()
-      use ZDPlasKin
+      density_ini_ch4  = 1.6254d+17
+      density_ini_o2   = 3.2705d+17
+      density_ini_he   = 1.4688d+18
+      density_ini_elec = 1.d+5  
+      call ZDPlasKin_set_density( 'CH4',density_ini_ch4)
+      call ZDPlasKin_set_density(  'O2',density_ini_o2)
+      call ZDPlasKin_set_density(  'He',density_ini_he)
+      call ZDPlasKin_set_density(   'e',density_ini_elec)
 
-      call ZDPlasKin_init()
+      ! Calcurate Energy Eq. (Look at line:47)
+      spec_heat_ratio          = 7.d0/5.d0
+      elec_power_elastic_n     = 0.d0
+      gas_heating              = .true.
+C
+      call ZDPlasKin_get_rates(SOURCE_TERMS=source_terms_species)
+
+      write(17, *) (source_terms_species(I), I = 1, II)
 
       RETURN
       END
