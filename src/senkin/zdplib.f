@@ -15,7 +15,7 @@ C
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
       DIMENSION Z(*), ZP(*), DELTA(*), RPAR(*), IPAR(*),
-     1          wdot_number(species_max), wdot_mole(species_max),
+     1          wdot_number(species_max),
      2          X(species_max)
       COMMON /RES1/ P
 C
@@ -56,24 +56,9 @@ C
          STOP
       ENDIF
       VOLSP = 1. / RHO
-C
-C         ENERGY EQUATION
-C
-      SUM = 0.
-      DO 100 K = 1, KK
-         K1 = K-1
-         SUM = SUM + RPAR(IPH+K1) * RPAR(IPWDOT+K1) * RPAR(IPWT+K1)
- 100  CONTINUE
-      DELTA(1) = ZP(1) + VOLSP *SUM /CPB
-C
-C         SPECIES EQUATIONS
-C
-      DO 200 K = 1, KK
-         K1 = K-1
-         DELTA(K+1) = ZP(K+1) - RPAR(IPWDOT+K1) *RPAR(IPWT+K1) *VOLSP
- 200  CONTINUE
 
-C ---------- ZDPlasKin ----------
+
+C ---------- get production rates from ZDPlasKin module ----------
 
       ! get mole fractions
       call CKYTX (Z(2), IPAR(IPICK), RPAR(IPRCK), X)
@@ -97,7 +82,7 @@ C ---------- ZDPlasKin ----------
       call ZDPlasKin_get_rates(SOURCE_TERMS=wdot_number)
 
       ! convert to CEMKIN unit system
-      wdot_mole = wdot_number/AN
+      RPAR(IPWDOT:IPWDOT+KK-1) = wdot_number/AN
 
       ! check calcrated reaction rates
       ! write(17, *) R, AN, P, (Z(I), I = 1, KK+1)
@@ -107,8 +92,24 @@ C ---------- ZDPlasKin ----------
 !       write(17, *) (wdot_mole(I), I = 1, KK)
 !       write(17, *) (RPAR(IPWDOT+I), I = 1, KK)
 
-      ! convert to CHEMKIN unit system
+C ---------- calcrate derivetives ----------
 
+C
+C         ENERGY EQUATION
+C
+      SUM = 0.
+      DO 100 K = 1, KK
+         K1 = K-1
+         SUM = SUM + RPAR(IPH+K1) * RPAR(IPWDOT+K1) * RPAR(IPWT+K1)
+ 100  CONTINUE
+      DELTA(1) = ZP(1) + VOLSP *SUM /CPB
+C
+C         SPECIES EQUATIONS
+C
+      DO 200 K = 1, KK
+         K1 = K-1
+         DELTA(K+1) = ZP(K+1) - RPAR(IPWDOT+K1) *RPAR(IPWT+K1) *VOLSP
+ 200  CONTINUE
 
       RETURN
       END
