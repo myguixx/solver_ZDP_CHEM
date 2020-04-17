@@ -84,9 +84,9 @@ C ---------- ZDPlasKin ----------
       AN = 6.02214d+23                       ! Avogadro number 1/mole
       P_Pa = P*0.1d+0                        ! Pa
       density_mole   = 1.0d-6*P_Pa/(R*Z(1))  ! mole/cm3
-      density_number = AN*density_mole      ! /cm3
+      density_number = AN*density_mole       ! /cm3
 
-      dens(:) = density_number*X(:)          ! /cm3
+      density(:) = density_number*X(:)       ! /cm3
 
       ! Set properties
       reduced_field_Td = 180.d0
@@ -94,23 +94,23 @@ C ---------- ZDPlasKin ----------
       call ZDPlasKin_set_conditions(GAS_TEMPERATURE=gas_temperature_K,
      1                              REDUCED_FIELD=reduced_field_Td)
 
-      density_ini_ch4  = 1.6254d+17
-      density_ini_o2   = 3.2705d+17
-      density_ini_he   = 1.4688d+18
-      density_ini_elec = 1.d+5  
-      call ZDPlasKin_set_density( 'CH4',density_ini_ch4)
-      call ZDPlasKin_set_density(  'O2',density_ini_o2)
-      call ZDPlasKin_set_density(  'He',density_ini_he)
-      call ZDPlasKin_set_density(   'e',density_ini_elec)
+      ! density_ini_ch4  = 1.6254d+17
+      ! density_ini_o2   = 3.2705d+17
+      ! density_ini_he   = 1.4688d+18
+      ! density_ini_elec = 1.d+5  
+      ! call ZDPlasKin_set_density( 'CH4',density_ini_ch4)
+      ! call ZDPlasKin_set_density(  'O2',density_ini_o2)
+      ! call ZDPlasKin_set_density(  'He',density_ini_he)
+      ! call ZDPlasKin_set_density(   'e',density_ini_elec)
 
       ! get reaction rates of each species [cm-3*s-1]
       call ZDPlasKin_get_rates(SOURCE_TERMS=source_terms_species)
 
       ! check calcrated reaction rates
-      ! write(17, *) (source_terms_species(I), I = 1, KK)
+      write(17, *) (source_terms_species(I), I = 1, KK)
       ! write(17, *) R, AN, P, (Z(I), I = 1, KK+1)
       write(17, *) P_Pa, density_mole, density_number, 
-     1             (dens(I), I = 1, KK)
+     1             (density(I), I = 1, KK)
 
       ! convert to CHEMKIN unit system
 

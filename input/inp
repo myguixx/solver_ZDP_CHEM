@@ -6,4 +6,5 @@ DELT    1.0E-12
 REAC  CH4     0.083
 REAC  O2      0.167
 REAC  HE      0.75
+REAC  E       5.0d-14
 END
