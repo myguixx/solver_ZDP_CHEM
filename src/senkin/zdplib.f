@@ -30,8 +30,33 @@ C    RPAR   = array of reaction pre-exponential constants
 C
       KK     = IPAR(1)
       IPRCK  = IPAR(2)
+      IPRD   = IPAR(3)
+      IPWT   = IPAR(6)
       IPWDOT = IPAR(7)
+      IPH    = IPAR(8)
       IPICK  = IPAR(9)
+      LOUT   = IPAR(10)
+      II     = IPAR(11)
+C
+C        MODIFY CHEMKIN WORK ARRAY FOR PRE-EXPONENTIAL
+C
+      DO 15 I = 1, II
+        CALL CKRDEX (-I, RPAR(IPRCK), RPAR(IPRD+I-1))
+15    CONTINUE
+C
+C         CALL CHEMKIN SUBROUTINES
+C
+      CALL CKRHOY (P, Z(1), Z(2), IPAR(IPICK), RPAR(IPRCK), RHO)
+      CALL CKCPBS (Z(1), Z(2), IPAR(IPICK), RPAR(IPRCK), CPB)
+      CALL CKWYP  (P, Z(1), Z(2), IPAR(IPICK), RPAR(IPRCK),
+     1             RPAR(IPWDOT))
+      CALL CKHMS  (Z(1), IPAR(IPICK), RPAR(IPRCK), RPAR(IPH))
+      IF (RHO .EQ. 0.0) THEN
+         WRITE (LOUT, '(/1X,A)') 'Stop, zero density in RCONP.'
+         STOP
+      ENDIF
+      VOLSP = 1. / RHO
+
 
 C ---------- get production rates from ZDPlasKin module ----------
 
@@ -57,7 +82,16 @@ C ---------- get production rates from ZDPlasKin module ----------
       call ZDPlasKin_get_rates(SOURCE_TERMS=wdot_number)
 
       ! convert to CEMKIN unit system
-      RPAR(IPWDOT:IPWDOT+KK-1) = wdot_number/AN
+      RPAR(IPWDOT:IPWDOT+KK-1) = RPAR(IPWDOT:IPWDOT+KK-1) 
+     1                         + wdot_number/AN
+
+      ! check calcrated reaction rates
+      ! write(17, *) R, AN, P, (Z(I), I = 1, KK+1)
+!       write(17, *) P_Pa, density_mole, density_number, 
+!      1             (density(I), I = 1, KK)
+!       write(17, *) (wdot_number(I), I = 1, KK)
+!       write(17, *) (wdot_mole(I), I = 1, KK)
+!       write(17, *) (RPAR(IPWDOT+I), I = 1, KK)
 
 C ---------- calcrate derivetives ----------
 
