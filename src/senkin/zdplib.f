@@ -15,7 +15,7 @@ C
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
       DIMENSION Z(*), ZP(*), DELTA(*), RPAR(*), IPAR(*),
-     1          wdot_number(species_max),
+     1          wdot_number(species_max), wdot_mole(species_max),
      2          X(species_max)
       COMMON /RES1/ P
 C
@@ -37,6 +37,9 @@ C
       IPICK  = IPAR(9)
       LOUT   = IPAR(10)
       II     = IPAR(11)
+
+C ---------- get production rates from CHEMKIN library ----------
+
 C
 C        MODIFY CHEMKIN WORK ARRAY FOR PRE-EXPONENTIAL
 C
@@ -57,6 +60,24 @@ C
       ENDIF
       VOLSP = 1. / RHO
 
+C ---------- calcrate derivetives from CHEMKIN library ----------
+
+C
+C         ENERGY EQUATION
+C
+      SUM = 0.
+      DO 100 K = 1, KK
+         K1 = K-1
+         SUM = SUM + RPAR(IPH+K1) * RPAR(IPWDOT+K1) * RPAR(IPWT+K1)
+ 100  CONTINUE
+      DELTA(1) = ZP(1) + VOLSP *SUM /CPB
+C
+C         SPECIES EQUATIONS
+C
+      DO 200 K = 1, KK
+         K1 = K-1
+         DELTA(K+1) = ZP(K+1) - RPAR(IPWDOT+K1) *RPAR(IPWT+K1) *VOLSP
+ 200  CONTINUE
 
 C ---------- get production rates from ZDPlasKin module ----------
 
@@ -82,35 +103,26 @@ C ---------- get production rates from ZDPlasKin module ----------
       call ZDPlasKin_get_rates(SOURCE_TERMS=wdot_number)
 
       ! convert to CEMKIN unit system
-      RPAR(IPWDOT:IPWDOT+KK-1) = RPAR(IPWDOT:IPWDOT+KK-1) 
-     1                         + wdot_number/AN
+      wdot_mole = wdot_number/AN
 
-      ! check calcrated reaction rates
-      ! write(17, *) R, AN, P, (Z(I), I = 1, KK+1)
-!       write(17, *) P_Pa, density_mole, density_number, 
-!      1             (density(I), I = 1, KK)
-!       write(17, *) (wdot_number(I), I = 1, KK)
-!       write(17, *) (wdot_mole(I), I = 1, KK)
-!       write(17, *) (RPAR(IPWDOT+I), I = 1, KK)
-
-C ---------- calcrate derivetives ----------
+C ---------- calcrate derivetives from ZDPlasKin module ----------
 
 C
 C         ENERGY EQUATION
 C
-      SUM = 0.
-      DO 100 K = 1, KK
-         K1 = K-1
-         SUM = SUM + RPAR(IPH+K1) * RPAR(IPWDOT+K1) * RPAR(IPWT+K1)
- 100  CONTINUE
-      DELTA(1) = ZP(1) + VOLSP *SUM /CPB
+!       SUM = 0.
+!       DO 300 K = 1, KK
+!          K1 = K-1
+!          SUM = SUM + RPAR(IPH+K1) * wdot_mole(K) * RPAR(IPWT+K1)
+!  300  CONTINUE
+!       DELTA(1) = DELTA(1) + VOLSP *SUM /CPB
 C
 C         SPECIES EQUATIONS
 C
-      DO 200 K = 1, KK
+      DO 400 K = 1, KK
          K1 = K-1
-         DELTA(K+1) = ZP(K+1) - RPAR(IPWDOT+K1) *RPAR(IPWT+K1) *VOLSP
- 200  CONTINUE
+         DELTA(K+1) = DELTA(K+1) - wdot_mole(K) *RPAR(IPWT+K1) *VOLSP
+ 400  CONTINUE
 
       RETURN
       END
