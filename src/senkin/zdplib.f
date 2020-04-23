@@ -14,6 +14,7 @@ C
       use ZDPlasKin
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
+      REAL(8), parameter :: eV_to_erg = 1.602d-12
       DIMENSION Z(*), ZP(*), DELTA(*), RPAR(*), IPAR(*),
      1          wdot_number(species_max), wdot_mole(species_max),
      2          X(species_max)
@@ -110,12 +111,14 @@ C ---------- calcrate derivetives from ZDPlasKin module ----------
 C
 C         ENERGY EQUATION
 C
-!       SUM = 0.
-!       DO 300 K = 1, KK
-!          K1 = K-1
-!          SUM = SUM + RPAR(IPH+K1) * wdot_mole(K) * RPAR(IPWT+K1)
-!  300  CONTINUE
-!       DELTA(1) = DELTA(1) + VOLSP *SUM /CPB
+
+      call ZDPlasKin_get_density('E',density_electron)
+      call ZDPlasKin_get_density_total(ALL_SPECIES=density_all)
+      call ZDPlasKin_get_conditions(ELEC_POWER_ELASTIC_N=power_elactic)
+      density_gas = density_all - density_electron
+      DELTA(1) = DELTA(1) + eV_to_erg*power_elastic*density_electron
+     1           *density_gas*VOLSP/CPB
+
 C
 C         SPECIES EQUATIONS
 C
