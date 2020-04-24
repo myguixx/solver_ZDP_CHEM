@@ -95,7 +95,8 @@ C ---------- get production rates from ZDPlasKin module ----------
       density(:) = density_number*X(:)       ! /cm3
 
       ! Set properties
-      reduced_field_Td = 180.d0
+      ! reduced_field_Td = 180.d0
+      call get_reduced_electricfield(time, reduced_field_Td)
       gas_temperature_K = Z(1)
       call ZDPlasKin_set_conditions(GAS_TEMPERATURE=gas_temperature_K,
      1                              REDUCED_FIELD=reduced_field_Td)
@@ -114,11 +115,10 @@ C
 
       call ZDPlasKin_get_density('E',density_electron)
       call ZDPlasKin_get_density_total(ALL_SPECIES=density_all)
-      call ZDPlasKin_get_conditions(ELEC_POWER_ELASTIC_N=power_elactic)
+      call ZDPlasKin_get_conditions(ELEC_POWER_ELASTIC_N=power_elastic)
       density_gas = density_all - density_electron
       DELTA(1) = DELTA(1) + eV_to_erg*power_elastic*density_electron
      1           *density_gas*VOLSP/CPB
-
 C
 C         SPECIES EQUATIONS
 C
@@ -132,3 +132,23 @@ C
 C
 C---------------------------------------------------------------
 C
+
+      subroutine get_reduced_electricfield(time, reduced_field)
+      real(8), parameter :: reduced_field_high = 180.0d0     ! [Td]
+      real(8), parameter :: frequency          = 30.0d3      ! [Hz]
+      real(8), parameter :: num_pulse          = 300.0d0     ! total nuber of pulses [-]
+      real(8), parameter :: duration_freq      = 1/frequency ! [s]
+      real(8), parameter :: duration_pulse     = 10.0d-9      ! [s] 
+      
+      real(8), intent(in)  :: time
+      real(8), intent(out) :: reduced_field
+
+      if (time < duration_pulse) then
+            reduced_field = reduced_field_high
+      else
+            reduced_field = 1.0d-10
+      endif
+      
+      ! write(24, *) time, time_mod, ith_pulse, reduced_field
+
+      end subroutine get_reduced_electricfield
