@@ -405,6 +405,12 @@ C
      2                LSDAS, Z, ZP, DWORK, IDWORK, SDWORK, RPAR,
      3                IPAR, ATOL, RTOL, TOLS, XMOL, KSYM)
       ENDIF
+
+C
+C        Return the value to CFD
+C
+      t_cfd = Z(1)
+      y_cfd = Z(2:KK+1)
 C
 7000  FORMAT (/5X,'Restart calculation from previous solution.'/)
 7100  FORMAT ('  Pressure (atm)  =', 1PE12.4,/,
