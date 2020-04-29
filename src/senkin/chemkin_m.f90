@@ -43,8 +43,7 @@ module chemkin
     subroutine initialize_chemkin_workarray()
 
         ! open input unit
-        open(unit_cklink, form='unformatted', file='./link/cklink')
-        open(unit_tplink, form='unformatted', file='./link/tplink')
+        open(unit_cklink, form='unformatted', file='./data/cklink')
 
         !   ------- get chemkin index ---------
 
