@@ -164,14 +164,22 @@ C
      1                  LENCCK, LINKCK, LIN, LOUT, LSAVE, LIGN, LREST,
      2                  LSENS, LIDAS, LRDAS, LSDAS, IDWORK, DWORK,
      3                  SDWORK, RPAR, IPAR, Z, ZP, RTOL, ATOL, XMOL,
-     5                  KSYM, CCKWRK)
+     4                  KSYM, CCKWRK,
+     5                  p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
 C
 C*****precision > double
+      use chemkin, only: ipick, iprck, ipwt, ipwdot, ipu, iprd
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
 C*****END precision > double
 C*****precision > single
 C      IMPLICIT REAL (A-H, O-Z), INTEGER (I-N)
 C*****END precision > single
+
+      real(8), intent(inout) :: t_cfd
+      real(8), intent(in)    :: p_cfd
+      real(8), intent(inout) :: y_cfd(kk)
+      real(8), intent(in)    :: delta_t_cfd
+      real(8), intent(in)    :: tols_cfd(4)
 C
       DIMENSION Z(*), ZP(*), XMOL(*), DWORK(*), IDWORK(*), SDWORK(*),
      1          RTOL(*), ATOL(*), RPAR(*), IPAR(*), TOLS(4)
@@ -190,7 +198,7 @@ C
 C
 C        POINTERS IN COMMON
 C
-      COMMON /POINT/ IPICK, IPRCK, IPWT, IPWDOT, IPU, IPRD
+C     COMMON /POINT/ IPICK, IPRCK, IPWT, IPWDOT, IPU, IPRD
       IPAR(1) = KK
       IPAR(2) = IPRCK
       IPAR(3) = IPRD
@@ -203,8 +211,8 @@ C
 C         INITIALIZE CHEMKIN
 C         (RESET CHEMKIN WORKSPACE)
 C
-      CALL CKINIT (LENICK, LENRCK, LENCCK, LINKCK, LOUT,
-     1             IPAR(IPICK), RPAR(IPRCK), CCKWRK )
+C     CALL CKINIT (LENICK, LENRCK, LENCCK, LINKCK, LOUT,
+C    1             IPAR(IPICK), RPAR(IPRCK), CCKWRK )
       CALL CKSYMS (CCKWRK, LOUT, KSYM, IERR)
       CALL CKWT   (IPAR(IPICK), RPAR(IPRCK), RPAR(IPWT))
       CALL CKRP   (IPAR(IPICK), RPAR(IPRCK), RU, RUC, PATM)

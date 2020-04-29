@@ -3,3 +3,4 @@
 zdp_chem
 output/*
 data/bolsigdb.log
+log.*
