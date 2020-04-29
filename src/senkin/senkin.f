@@ -465,6 +465,7 @@ C
 C
 C       SET PARAMETERS FOR DASAC
 C
+      INFO(1) = 1
       INFO(3) = 1
       INFO(2) = 1
 C
