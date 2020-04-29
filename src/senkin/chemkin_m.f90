@@ -64,16 +64,6 @@ module chemkin
         call ckinit(len_int_ckwk, len_real_ckwk, len_char_ckwk, unit_cklink, &
                     unit_stdout, int_ckwk(ipick), real_ckwk(iprck), char_ckwk)
 
-        !   ------- initialize transport work array ---------
-
-        call mclen(unit_tplink, unit_stdout, len_int_tpwk, len_real_tpwk)
-        
-        allocate(int_tpwk(len_int_tpwk))
-        allocate(real_tpwk(len_real_tpwk))
-
-        call mcinit(unit_tplink, unit_stdout, len_int_tpwk, len_real_tpwk, &
-                      int_tpwk, real_tpwk)
-
     end subroutine initialize_chemkin_workarray
 
     
@@ -134,33 +124,6 @@ module chemkin
         len_char_ckwk = NKSYM + KK
 
     end subroutine calc_pointer
-
-    subroutine get_tranport_data(t_cfd, p_cfd, y_cfd, D_mix, Lambda_mix, c_p)
-
-        ! input values
-        real(8), intent(in) :: t_cfd     ! K
-        real(8), intent(in) :: p_cfd     ! Pa
-        real(8), intent(in) :: y_cfd(kk) ! Mass fractions
-
-        ! output transport data
-        ! mixture diffusion coefficient [CM**2/S]
-        real(8), intent(out) :: D_mix(kk) 
-        ! mixture thermal conductivity [ERG/CM*K*S]
-        real(8), intent(out) :: Lambda_mix
-        !  mean specific heat at constant pressure [ergs/(gm*K)]
-        real(8), intent(out) :: c_p
-
-        ! variables for calculations
-        real(8) p_calc ! dyne/cm**2
-        real(8) :: x_calc(kk) ! Mole fractions
-        p_calc = p_cfd*10.0d0       ! Pa to dyne/cm**2
-        call ckytx(y_cfd, int_ckwk, real_ckwk, x_calc)
-
-        call mcadif(p_calc, t_cfd, x_calc, real_tpwk, D_mix) 
-        call mcacon (t_cfd, x_calc, real_tpwk, Lambda_mix)
-        call ckcpbs(t_cfd, y_cfd, int_ckwk, real_ckwk, c_p)
-
-    end subroutine get_tranport_data
 
     subroutine get_next_TY(p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
 
