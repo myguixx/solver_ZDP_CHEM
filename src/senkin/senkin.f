@@ -230,9 +230,17 @@ C
 C
 C        READ KEYWORD INPUT
 C
-      CALL REDKEY (DELT, KK, KSYM, LIN, LOUT, PA,
-     1             RESTRT, T, TLIM, TOLS, TRES, TSTOP, XMOL)
-      P = PA * PATM
+C      CALL REDKEY (DELT, KK, KSYM, LIN, LOUT, PA,
+C     1             RESTRT, T, TLIM, TOLS, TRES, TSTOP, XMOL)
+C
+C        Convert CFD Value to SENKIN Input
+C
+      DELT  = delta_t_cfd
+      TSTOP = delta_t_cfd
+      T     = t_cfd
+      TOLS  = tols_cfd
+      P     = p_cfd*10d0 ! Dyne/cm2
+      call ckytx(y_cfd, IPAR(IPICK), RPAR(IPRCK), XMOL)
 C
 C       PHYSICAL INITIAL CONDITIONS
 C
@@ -411,7 +419,7 @@ C
 7113  FORMAT (/5X,'Volume is a function of time.'/)
 7114  FORMAT (/5X,'Temperature is held constant.'/)
 7115  FORMAT (/5X,'Temperature is a function of time.'/)
-      STOP
+      RETURN
       END
 C
 C----------------------------------------------------------------------
