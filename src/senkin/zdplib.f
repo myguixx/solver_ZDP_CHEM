@@ -1,6 +1,9 @@
       SUBROUTINE RCONP_ZDP (TIME, Z, ZP, DELTA, IRES, RPAR, IPAR)
-      use zdp_chem
-      use ZDPlasKin
+      use zdp_chem, only: calc_reduced_field, reduced_field
+      use ZDPlasKin, only: species_max, ZDPlasKin_set_conditions,
+     1 ZDPlasKin_get_rates, ZDPlasKin_get_density,
+     2 ZDPlasKin_get_density_total, ZDPlasKin_get_conditions,
+     3 density
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
       REAL(8), parameter :: eV_to_erg = 1.602d-12
@@ -80,7 +83,6 @@ C ---------- get production rates from ZDPlasKin module ----------
       P_Pa = P*0.1d+0                        ! Pa
       density_mole   = 1.0d-6*P_Pa/(R*Z(1))  ! mole/cm3
       density_number = AN*density_mole       ! /cm3
-
       density(:) = density_number*X(:)       ! /cm3
 
       ! Set properties

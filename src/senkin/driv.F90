@@ -11,7 +11,7 @@ module zdp_chem
       real(8), parameter :: num_pulse          = 300.0d0     ! total nuber of pulses [-]
       real(8), parameter :: duration_freq      = 1/frequency ! [s]
       real(8), parameter :: duration_pulse     = 10.0d-9     ! [s] 
-      real(8) redued_field
+      real(8) reduced_field
 
      ! parameter for ODE
       real(8), parameter :: p = 7999.342105d0            ! [Pa]
