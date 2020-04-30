@@ -31,15 +31,18 @@ program test_main
       !   ------- initialize section ---------
 
       call initialize_chemkin_workarray()
+
+      CALL ZDPINIT()
       
       !   ------- chemistry section ---------
 
-      call get_next_TY(p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
+      do i = 1, 10
 
-      write(6, *) 'temperature [K]'
-      write(6, *) t_cfd
-      write(6, *) 'mole fractions [-]'
-      write(6, *) y_cfd
+            call get_next_TY(p_cfd, t_cfd, y_cfd, delta_t_cfd, tols_cfd)
+
+            write(6, *) i, '-th pulse', t_cfd, y_cfd(83)
+
+      enddo
 
 end program test_main
 

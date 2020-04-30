@@ -217,11 +217,6 @@ C    1             IPAR(IPICK), RPAR(IPRCK), CCKWRK )
       CALL CKWT   (IPAR(IPICK), RPAR(IPRCK), RPAR(IPWT))
       CALL CKRP   (IPAR(IPICK), RPAR(IPRCK), RU, RUC, PATM)
 C
-C         INITIALIZE ZDPLASKIN
-C         (RESET CHEMKIN WORKSPACE)
-C
-      CALL ZDPINIT ()
-C
 C      LOAD THE REACTION PARAMETERS INTO RPAR
 C
       DO 15 I = 1, II
@@ -241,6 +236,7 @@ C
       TOLS  = tols_cfd
       P     = p_cfd*10d0 ! Dyne/cm2
       call ckytx(y_cfd, IPAR(IPICK), RPAR(IPRCK), XMOL)
+      RESTRT = .false.
 C
 C       PHYSICAL INITIAL CONDITIONS
 C
@@ -465,6 +461,7 @@ C
 C
 C       SET PARAMETERS FOR DASAC
 C
+C     INFO(1) = 1
       INFO(3) = 1
       INFO(2) = 1
 C
