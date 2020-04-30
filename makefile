@@ -8,7 +8,7 @@ DEBAG =
 TARGET = zdp_chem
 SKN_O = src/senkin/cklib.o src/senkin/dasac.o src/senkin/driv.o \
         src/senkin/senkin.o src/senkin/zdplib.o src/senkin/chemkin_m.o
-SKN_M = module/chemkin.mod
+SKN_M = module/chemkin.mod module/zdp_chem.mod
 ZDP_O = src/zdplaskin/dvode_f90_m.o src/zdplaskin/zdplaskin_m.o
 ZDP_M = module/dvode_f90_m.mod module/zdplaskin.mod
 
@@ -28,4 +28,4 @@ $(TARGET): $(ZDP_O) $(SKN_O)
 
 .PHONY: clean
 clean :
-	rm $(TARGET) $(SKN_O) $(ZDP_O) $(ZDP_M)
+	rm $(TARGET) $(SKN_O) $(SKN_M) $(ZDP_O) $(ZDP_M)

@@ -230,7 +230,7 @@ C     1             RESTRT, T, TLIM, TOLS, TRES, TSTOP, XMOL)
 C
 C        Convert CFD Value to SENKIN Input
 C
-      DELT  = delta_t_cfd
+      DELT  = 1d-12
       TSTOP = delta_t_cfd
       T     = t_cfd
       TOLS  = tols_cfd
@@ -434,6 +434,7 @@ C
 C  This module directs the integration for cases 1-3, where temperature
 C  is not known and the energy equation is included.
 C
+      use zdp_chem, only: write_datasheet
 C*****precision > double
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
 C*****END precision > double
@@ -575,6 +576,7 @@ C
      1                P, PATM, RPAR, TIM, XMOL, Z)
          CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
      1                P, PATM, RPAR, TIM, XMOL, Z)
+         call write_datasheet(TIM, Z)
          TLASTP = TIM
          TPRINT = TPRINT + DTOUT
 C

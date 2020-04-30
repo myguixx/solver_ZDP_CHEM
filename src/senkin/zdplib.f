@@ -1,16 +1,5 @@
-      SUBROUTINE ZDPINIT()
-      use ZDPlasKin
-
-      OPEN (17, FORM='FORMATTED', FILE = 'output/zdpout')
-
-      call ZDPlasKin_init()
-
-      RETURN
-      END
-C
-C---------------------------------------------------------------
-C
       SUBROUTINE RCONP_ZDP (TIME, Z, ZP, DELTA, IRES, RPAR, IPAR)
+      use zdp_chem
       use ZDPlasKin
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
@@ -96,10 +85,10 @@ C ---------- get production rates from ZDPlasKin module ----------
 
       ! Set properties
       ! reduced_field_Td = 180.d0
-      call get_reduced_electricfield(time, reduced_field_Td)
+      call calc_reduced_field(time)
       gas_temperature_K = Z(1)
       call ZDPlasKin_set_conditions(GAS_TEMPERATURE=gas_temperature_K,
-     1                              REDUCED_FIELD=reduced_field_Td)
+     1                              REDUCED_FIELD=reduced_field)
 
       ! get reaction rates of each species [cm-3*s-1]
       call ZDPlasKin_get_rates(SOURCE_TERMS=wdot_number)
@@ -133,22 +122,25 @@ C
 C---------------------------------------------------------------
 C
 
-      subroutine get_reduced_electricfield(time, reduced_field)
-      real(8), parameter :: reduced_field_high = 180.0d0     ! [Td]
-      real(8), parameter :: frequency          = 30.0d3      ! [Hz]
-      real(8), parameter :: num_pulse          = 300.0d0     ! total nuber of pulses [-]
-      real(8), parameter :: duration_freq      = 1/frequency ! [s]
-      real(8), parameter :: duration_pulse     = 10.0d-9      ! [s] 
-      
-      real(8), intent(in)  :: time
-      real(8), intent(out) :: reduced_field
+      ! subroutine get_reduced_electricfield(time, reduced_field)
 
-      if (time < duration_pulse) then
-            reduced_field = reduced_field_high
-      else
-            reduced_field = 1.0d-10
-      endif
-      
-      ! write(24, *) time, time_mod, ith_pulse, reduced_field
+      ! use zdp_chem
 
-      end subroutine get_reduced_electricfield
+      ! ! real(8), parameter :: reduced_field_high = 180.0d0     ! [Td]
+      ! ! real(8), parameter :: frequency          = 30.0d3      ! [Hz]
+      ! ! real(8), parameter :: num_pulse          = 300.0d0     ! total nuber of pulses [-]
+      ! ! real(8), parameter :: duration_freq      = 1/frequency ! [s]
+      ! ! real(8), parameter :: duration_pulse     = 10.0d-9      ! [s] 
+      
+      ! real(8), intent(in)  :: time
+      ! real(8), intent(out) :: reduced_field
+
+      ! if (time < duration_pulse) then
+      !       reduced_field = reduced_field_high
+      ! else
+      !       reduced_field = 1.0d-10
+      ! endif
+      
+      ! ! write(24, *) time, time_mod, ith_pulse, reduced_field
+
+      ! end subroutine get_reduced_electricfield
