@@ -1,4 +1,7 @@
 module chemkin
+
+    implicit none
+    
     ! unit nuber for input
     integer, parameter :: unit_tplink = 20
     integer, parameter :: unit_cklink = 21
