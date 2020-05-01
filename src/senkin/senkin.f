@@ -434,7 +434,7 @@ C
 C  This module directs the integration for cases 1-3, where temperature
 C  is not known and the energy equation is included.
 C
-      use zdp_chem, only: write_datasheet
+      use zdp_chem, only: write_header_datasheet, write_datasheet
 C*****precision > double
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
 C*****END precision > double
@@ -462,7 +462,7 @@ C     OPEN (LDTS, FORM='FORMATTED', FILE = 'output/skout_datasheet')
 C
 C       SET PARAMETERS FOR DASAC
 C
-C     INFO(1) = 1
+      INFO(1) = 0
       INFO(3) = 1
       INFO(2) = 1
 C
@@ -514,6 +514,9 @@ C     WRITE (LDTS, 7720)
 C     WRITE (LDTS, *) (KSYM(I), I = 1, KK)
 C     CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
 C    1             P, PATM, RPAR, TIM, XMOL, Z)
+      call write_header_datasheet(KSYM)
+      call write_datasheet(TIM, Z)
+
  7720 FORMAT(/,' t(sec)     P(atm)     T(K)    ', $)
 C
 C       A variable used for sensitivity analysis. Z(ls,J) --> ls = 1: temperature, ls = 2...NSYS: species

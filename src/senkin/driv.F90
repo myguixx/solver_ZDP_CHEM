@@ -8,10 +8,11 @@ module zdp_chem
       ! parameter for dishcarge
       real(8), parameter :: reduced_field_high = 180.0d0     ! [Td]
       real(8), parameter :: frequency          = 30.0d3      ! [Hz]
-      real(8), parameter :: num_pulse          = 300.0d0     ! total nuber of pulses [-]
       real(8), parameter :: duration_freq      = 1/frequency ! [s]
-      real(8), parameter :: duration_pulse     = 10.0d-9     ! [s] 
+      real(8), parameter :: duration_pulse     = 5.0d-9      ! [s] 
+      integer, parameter :: num_pulse          = 10          ! total nuber of pulses [-]
       real(8) reduced_field
+      integer ith_pulse
 
      ! parameter for ODE
       real(8), parameter :: p = 7999.342105d0            ! [Pa]
@@ -38,14 +39,30 @@ module zdp_chem
 
       subroutine open_units()
             open(unit_zdp_chem, form='formatted', file='output/zdp_chem')
-            open(unit_dts, form='formatted', file='output/dataseet')
+            open(unit_dts, form='formatted', file='output/datasheet')
       end subroutine open_units
 
+      subroutine write_header_datasheet(ksym)
+            character(6), intent(in) :: ksym(num_spec)*16
+
+            write(unit_dts, *) 't(sec)  E/N(Td)  T(K)  ', &
+                               (ksym(i), i = 1, num_spec)
+
+      end subroutine write_header_datasheet
+
       subroutine write_datasheet(time, z)
+            use chemkin, only: int_ckwk, real_ckwk, ipick, iprck
+
             real(8), intent(in)  :: time
             real(8), intent(in) :: z(num_spec+1)
 
-            write(unit_dts, *) time , z, reduced_field
+            real(8) x(num_spec)
+            real(8) time_ 
+            time_ = (ith_pulse - 1)*duration_freq + time
+
+            call ckytx(z(2), int_ckwk(ipick), real_ckwk(iprck), x)
+
+            write(unit_dts, *) time_, reduced_field, z(1), x
       end subroutine write_datasheet
 
       subroutine calc_reduced_field(time)
@@ -64,8 +81,6 @@ program test_main
       use zdp_chem
       use chemkin, only: initialize_chemkin_workarray, get_next_TY
       use zdplaskin, only: zdplaskin_init
-
-      integer i
       
       !   ------- initialize section ---------
 
@@ -77,11 +92,11 @@ program test_main
       
       !   ------- chemistry section ---------
 
-      do i = 1, 10
+      do ith_pulse = 1, num_pulse
 
             call get_next_TY(p, t, y, delta_t, tols)
 
-            write(unit_zdp_chem, *) i, '-th pulse', t, y
+            write(unit_zdp_chem, *) ith_pulse, '-th pulse', t, y
 
       enddo
 
