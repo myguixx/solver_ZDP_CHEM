@@ -1,4 +1,5 @@
 module chemkin
+    implicit none
     
     ! unit nuber for input
     integer, parameter :: unit_tplink = 20
@@ -30,7 +31,7 @@ module chemkin
     integer mm ! number of elements
     integer kk ! number of species
     integer ii ! number of reactions
-    integer nift ! number of fitting coefficients
+    integer nfit ! number of fitting coefficients
     
     ! array pointers
     integer nsys, neq, lsdas, lidas, lrdas
@@ -134,7 +135,7 @@ module chemkin
         real(8), intent(in)    :: tols_cfd(4)
 
         integer :: icase = 1
-        integer  lin, lout, lsave, lign, lrest
+        integer  lin, lout, linkck, lsave, lign, lrest
         logical :: lsens = .false.
 
         DATA LIN/5/, LOUT/6/, LINKCK/25/, LSAVE/7/, LIGN/9/, LREST/10/
