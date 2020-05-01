@@ -35,7 +35,6 @@ module zdp_chem
               0.00d+00,0.00d+00,0.00d+00,0.00d+00,0.00d+00,0.00d+00,0.00d+00,0.00d+00, &
               0.00d+00,0.00d+00,5.68d-20/)
 
-
       contains 
 
       subroutine open_units()
@@ -47,24 +46,45 @@ module zdp_chem
             character(6), intent(in) :: ksym(num_spec)*16
 
             if (ith_pulse == 1) then
-                  write(unit_dts, *) 't(sec)  E/N(Td)  T(K)  ', ksym
+                  write(unit_dts, *) 't(sec)  E/N(Td)  P(K/s)  Te(K)  T(K)  N(cm-3)  Ne(cm-3)  ', ksym
             endif
 
       end subroutine write_header_datasheet
 
       subroutine write_datasheet(time, z)
             use chemkin, only: int_ckwk, real_ckwk, ipick, iprck
+            use zdplaskin, only: ZDPlasKin_get_conditions,   &
+                                 ZDPlasKin_get_density_total, &
+                                 ZDPlasKin_get_density
 
             real(8), intent(in)  :: time
             real(8), intent(in) :: z(num_spec+1)
+
+            real(8), parameter :: eV_to_K = 1.16045052d4
             
+            real(8) time_
             real(8) x(num_spec)
-            real(8) time_ 
+            real(8) t_ele   ! electron temperature [K]
+            real(8) p_ele   ! total energy [K/s]
+            real(8) p_ele_n ! reduced total energy [eV*cm**3/s]
+            real(8) density_all ! total density [cm**-3]
+            real(8) density_ele ! electron density [cm**-3]
+
+            ! get current time
             time_ = (ith_pulse - 1)*duration_freq + time
 
+            ! get mole fraction x
             call ckytx(z(2), int_ckwk(ipick), real_ckwk(iprck), x)
 
-            write(unit_dts, *) time_, reduced_field, z(1), x
+            ! get energy input from electric field
+            call ZDPlasKin_get_conditions(ELEC_TEMPERATURE=t_ele, &
+                                          ELEC_POWER_N=p_ele_n)
+            call ZDPlasKin_get_density_total(ALL_SPECIES=density_all)
+            call ZDPlasKin_get_density('E',density_ele)
+            p_ele = p_ele_n*(density_all - density_ele)*eV_to_K
+
+            write(unit_dts, *) time_, reduced_field, p_ele, t_ele,  z(1), &
+                               density_all, density_ele, x
       end subroutine write_datasheet
 
       subroutine calc_reduced_field(time)
