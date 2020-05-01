@@ -97,22 +97,57 @@ module zdp_chem
 
 
       subroutine write_matrix_chem()
+            use chemkin, only: int_ckwk, ipick, kk, ii
+            real(8) :: mtrx(kk, ii)
+            integer IcNU, IcNK
+
+            common /CKSTRT/ IcNU, IcNK
+
+            mtrx = 0
+
+            ! call get_matrix_chem(int_ckwk(ipick+icNU-1), mtrx)
+
+            call ckratx_(ii, 6, int_ckwk(ipick+IcNU-1), int_ckwk(ipick+IcNK-1))
 
             write(unit_mtrx_chem, *) 'chemkin matrix'
 
       end subroutine write_matrix_chem
+      
+      ! subroutine get_matrix_chem(nunk, mtrx)
+      !       use chemkin, only: kk, ii
+      !       integer, intent(in) :: nunk(6, ii)
+      !       real(8), intent(out) :: mtrx(kk, ii)
+      !       integer i, k
+
+      !       do i = 1, ii
+      !             write(unit_mtrx_chem, *) (nunk(k, i), k = 1, 6)
+      !       enddo
+
+      ! end subroutine get_matrix_chem
 
       subroutine write_reactions_chem_header()
+            use chemkin, only: ii
+            integer i
 
-            write(unit_reac_chem, *) 'header of chemkin reaction'
+            write(unit_reac_chem, *) 't(seq)  ', (i, i= 1, ii)
 
       end subroutine write_reactions_chem_header
 
       subroutine write_reactions_chem(time, z)
+            use chemkin, only: int_ckwk, real_ckwk, ipick, iprck, ii
+
             real(8), intent(in)  :: time
             real(8), intent(in) :: z(num_spec+1)
 
-            write(unit_reac_chem, *) time, 'chemkin reaction rate'
+            real(8) time_
+            real(8) :: Q(ii) ! Rates of progreess [moles/(cm**3*sec)]
+
+            ! get current time
+            time_ = (ith_pulse - 1)*duration_freq + time
+            ! get rop
+            call ckqyp(p*10d0, z(1), z(2), int_ckwk(ipick), real_ckwk(iprck), Q)
+
+            write(unit_reac_chem, *) time_, Q
 
       end subroutine write_reactions_chem
       
@@ -166,7 +201,7 @@ program test_main
       !   ------- export reaction coefficients ---------
 
       call write_matrix_chem()
-      
+
       call write_matrix_zdp()
       
       !   ------- chemistry section ---------
