@@ -45,8 +45,10 @@ module zdp_chem
       subroutine write_header_datasheet(ksym)
             character(6), intent(in) :: ksym(num_spec)*16
 
-            write(unit_dts, *) 't(sec)  E/N(Td)  T(K)  ', &
-                               (ksym(i), i = 1, num_spec)
+            if (ith_pulse == 1) then
+                  write(unit_dts, *) 't(sec)  E/N(Td)  T(K)  ', &
+                                     (ksym(i), i = 1, num_spec)
+            endif
 
       end subroutine write_header_datasheet
 
