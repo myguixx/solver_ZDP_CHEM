@@ -1,4 +1,5 @@
 module zdp_chem
+      implicit none
 
       integer, parameter :: unit_zdp_chem = 41
       integer, parameter :: unit_dts = 42
@@ -46,8 +47,7 @@ module zdp_chem
             character(6), intent(in) :: ksym(num_spec)*16
 
             if (ith_pulse == 1) then
-                  write(unit_dts, *) 't(sec)  E/N(Td)  T(K)  ', &
-                                     (ksym(i), i = 1, num_spec)
+                  write(unit_dts, *) 't(sec)  E/N(Td)  T(K)  ', ksym
             endif
 
       end subroutine write_header_datasheet
@@ -57,7 +57,7 @@ module zdp_chem
 
             real(8), intent(in)  :: time
             real(8), intent(in) :: z(num_spec+1)
-
+            
             real(8) x(num_spec)
             real(8) time_ 
             time_ = (ith_pulse - 1)*duration_freq + time
