@@ -52,7 +52,7 @@ C
       COMMON /POINT/ IPICK, IPRCK, IPWT, IPWDOT, IPU, IPRD
 C
       WRITE (LOUT, 15)
-      WRITE (LIGN, 15)
+C     WRITE (LIGN, 15)
    15 FORMAT(
      1/' SENKIN:  Sensitity Analysis',
      2/'          Author: Andy Lutz',
@@ -339,37 +339,37 @@ C       PRINT INITIAL CONDITIONS
 C
       IF (RESTRT) THEN
          WRITE (LOUT, 7000)
-         WRITE (LIGN, 7000)
+C        WRITE (LIGN, 7000)
       ENDIF
 C
       IF (ICASE .EQ. 1) THEN
          WRITE (LOUT, 7111)
-         WRITE (LIGN, 7111)
+C        WRITE (LIGN, 7111)
       ELSEIF (ICASE .EQ. 2) THEN
          WRITE (LOUT, 7112)
-         WRITE (LIGN, 7112)
+C        WRITE (LIGN, 7112)
       ELSEIF (ICASE .EQ. 3) THEN
          WRITE (LOUT, 7113)
-         WRITE (LIGN, 7113)
+C        WRITE (LIGN, 7113)
       ELSEIF (ICASE .EQ. 4) THEN
          WRITE (LOUT, 7114)
-         WRITE (LIGN, 7114)
+C        WRITE (LIGN, 7114)
       ELSEIF (ICASE .EQ. 5) THEN
          WRITE (LOUT, 7115)
-         WRITE (LIGN, 7115)
+C        WRITE (LIGN, 7115)
       ENDIF
       WRITE (LOUT, 7103)
-      WRITE (LIGN, 7103)
+C     WRITE (LIGN, 7103)
       WRITE (LOUT, 7100) PA, T, RHO
-      WRITE (LIGN, 7100) PA, T, RHO
+C     WRITE (LIGN, 7100) PA, T, RHO
       IF (ICASE .EQ. 3) THEN
          WRITE (LOUT, 7104) TOTMAS
-         WRITE (LIGN, 7104) TOTMAS
+C        WRITE (LIGN, 7104) TOTMAS
       ENDIF
-      WRITE (LIGN, 7101)
+C     WRITE (LIGN, 7101)
       WRITE (LOUT, 7101)
       DO 130 K = 1, KK
-         WRITE (LIGN, 7102) KSYM(K), XMOL(K)
+C        WRITE (LIGN, 7102) KSYM(K), XMOL(K)
          WRITE (LOUT, 7102) KSYM(K), XMOL(K)
 130   CONTINUE
 C
@@ -458,7 +458,7 @@ C
 C       SET OUTPUT FILE FOR USER COMFORMATION
 C
       LDTS = 11
-      OPEN (LDTS, FORM='FORMATTED', FILE = 'output/skout_datasheet')
+C     OPEN (LDTS, FORM='FORMATTED', FILE = 'output/skout_datasheet')
 C
 C       SET PARAMETERS FOR DASAC
 C
@@ -502,18 +502,18 @@ C*****END precision > double
 C
 C       PRINT    Initial condition.
 C
-      WRITE (LSAVE) LSENS
-      WRITE (LSAVE) NSYS, KK, II
-      WRITE (LSAVE) TIM, P, (Z(I,1), I = 1, NSYS)
-      IF (LSENS) WRITE (LSAVE) (( Z(I,J), I=1,NSYS), J = 2, II+1)
+C     WRITE (LSAVE) LSENS
+C     WRITE (LSAVE) NSYS, KK, II
+C     WRITE (LSAVE) TIM, P, (Z(I,1), I = 1, NSYS)
+C     IF (LSENS) WRITE (LSAVE) (( Z(I,J), I=1,NSYS), J = 2, II+1)
       WRITE (LOUT, '(//A/)') '  Time Integration:'
-      WRITE (LIGN, '(//A/)') '  Time Integration:'
-      CALL TEXT13 (IPAR, KK, KSYM, LIGN, LOUT,
-     1             P, PATM, RPAR, TIM, XMOL, Z)
-      WRITE (LDTS, 7720)
-      WRITE (LDTS, *) (KSYM(I), I = 1, KK)
-      CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
-     1             P, PATM, RPAR, TIM, XMOL, Z)
+C     WRITE (LIGN, '(//A/)') '  Time Integration:'
+C     CALL TEXT13 (IPAR, KK, KSYM, LOUT, LOUT,
+C    1             P, PATM, RPAR, TIM, XMOL, Z)
+C     WRITE (LDTS, 7720)
+C     WRITE (LDTS, *) (KSYM(I), I = 1, KK)
+C     CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
+C    1             P, PATM, RPAR, TIM, XMOL, Z)
  7720 FORMAT(/,' t(sec)     P(atm)     T(K)    ', $)
 C
 C       A variable used for sensitivity analysis. Z(ls,J) --> ls = 1: temperature, ls = 2...NSYS: species
@@ -522,10 +522,10 @@ C
 C
 C       PRINT    Sensitivity coefficient.
 C
-      IF (LSENS) THEN
-         WRITE (LIGN, '(A)') ' Sensitivity coefficient'
-         WRITE (LIGN, '(I4, 1PE12.4)') (J-1, Z(ls,J), J = 2, II+1)
-      ENDIF
+C     IF (LSENS) THEN
+C        WRITE (LIGN, '(A)') ' Sensitivity coefficient'
+C        WRITE (LIGN, '(I4, 1PE12.4)') (J-1, Z(ls,J), J = 2, II+1)
+C     ENDIF
 C
 C       INTEGRATION LOOP
 C
@@ -556,8 +556,8 @@ C
 C
 C           PRINT TO PLOT FILE
 C
-      WRITE (LSAVE) TIM, P, (Z(I,1), I = 1, NSYS)
-      IF (LSENS) WRITE (LSAVE) ((Z(I,J),I = 1,NSYS), J = 2,II+1)
+C     WRITE (LSAVE) TIM, P, (Z(I,1), I = 1, NSYS)
+C     IF (LSENS) WRITE (LSAVE) ((Z(I,J),I = 1,NSYS), J = 2,II+1)
       NOSAV = NOSAV + 1
 C
 C         CHECK FOR THERMAL RUNAWAY
@@ -572,20 +572,20 @@ C
 C           PRINT OUT SOLUTION
 C
       IF (TIM .GE. TPRINT) THEN
-         CALL TEXT13 (IPAR, KK, KSYM, LIGN, LOUT,
-     1                P, PATM, RPAR, TIM, XMOL, Z)
-         CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
-     1                P, PATM, RPAR, TIM, XMOL, Z)
+C        CALL TEXT13 (IPAR, KK, KSYM, LOUT, LOUT,
+C    1                P, PATM, RPAR, TIM, XMOL, Z)
+C        CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
+C    1                P, PATM, RPAR, TIM, XMOL, Z)
          call write_datasheet(TIM, Z)
          TLASTP = TIM
          TPRINT = TPRINT + DTOUT
 C
 C       PRINT    Sensitivity coefficient.
 C
-         IF (LSENS) THEN
-            WRITE (LIGN, '(A)') ' Sensitivity coefficient'
-            WRITE (LIGN, '(I4, 1PE12.4)') (J-1, Z(ls,J), J = 2, II+1)
-         ENDIF
+C        IF (LSENS) THEN
+C           WRITE (LIGN, '(A)') ' Sensitivity coefficient'
+C           WRITE (LIGN, '(I4, 1PE12.4)') (J-1, Z(ls,J), J = 2, II+1)
+C        ENDIF
       ENDIF
 C
 C*****unicos timelimit
@@ -602,23 +602,23 @@ C
 C        LAST TEXT PRINT
 C
 1000  CONTINUE
-      IF (TLASTP .NE. TIM) THEN
-         CALL TEXT13 (IPAR, KK, KSYM, LIGN,
-     1                   LOUT, P, PATM, RPAR, TIM, XMOL, Z)
+C     IF (TLASTP .NE. TIM) THEN
+C        CALL TEXT13 (IPAR, KK, KSYM, LIGN,
+C    1                   LOUT, P, PATM, RPAR, TIM, XMOL, Z)
 C
 C       PRINT    Sensitivity coefficient.
 C
-         IF (LSENS) THEN
-            WRITE (LIGN, '(A)') ' Sensitivity coefficient'
-            WRITE (LIGN, '(I4, 1PE12.4)') (J-1, Z(ls,J), J = 2, II+1)
-         ENDIF
-      ENDIF
+C        IF (LSENS) THEN
+C           WRITE (LIGN, '(A)') ' Sensitivity coefficient'
+C           WRITE (LIGN, '(I4, 1PE12.4)') (J-1, Z(ls,J), J = 2, II+1)
+C        ENDIF
+C     ENDIF
 C
-      WRITE (LIGN, 7040) TIGN
-      WRITE (LIGN, 7045) TLIM
+C     WRITE (LIGN, 7040) TIGN
+C     WRITE (LIGN, 7045) TLIM
       WRITE (LOUT, 7040) TIGN
       WRITE (LOUT, 7045) TLIM
-      WRITE (LIGN, 7050) NOSAV
+C     WRITE (LIGN, 7050) NOSAV
       WRITE (LOUT, 7050) NOSAV
 C
 C         FORMATS
