@@ -462,7 +462,11 @@ C     OPEN (LDTS, FORM='FORMATTED', FILE = 'output/skout_datasheet')
 C
 C       SET PARAMETERS FOR DASAC
 C
+<<<<<<< HEAD
       INFO(1) = 0
+=======
+      INFO(1) = 1
+>>>>>>> 461a9b838b1ec49c3f7234045896ef5a541a7621
       INFO(3) = 1
       INFO(2) = 1
 C

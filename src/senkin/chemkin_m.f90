@@ -1,4 +1,8 @@
 module chemkin
+<<<<<<< HEAD
+=======
+
+>>>>>>> 461a9b838b1ec49c3f7234045896ef5a541a7621
     implicit none
     
     ! unit nuber for input
