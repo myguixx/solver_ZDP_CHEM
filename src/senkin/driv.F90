@@ -1,8 +1,12 @@
 module zdp_chem
       implicit none
 
-      integer, parameter :: unit_zdp_chem = 41
-      integer, parameter :: unit_dts = 42
+      integer, parameter :: unit_zdp_chem  = 41
+      integer, parameter :: unit_dts       = 42
+      integer, parameter :: unit_reac_chem = 43
+      integer, parameter :: unit_mtrx_chem = 44
+      integer, parameter :: unit_reac_zdp  = 45
+      integer, parameter :: unit_mtrx_zdp  = 46
 
       integer,parameter :: num_spec = 83
 
@@ -38,8 +42,12 @@ module zdp_chem
       contains 
 
       subroutine open_units()
-            open(unit_zdp_chem, form='formatted', file='output/zdp_chem')
-            open(unit_dts, form='formatted', file='output/datasheet')
+            open(unit_zdp_chem,  form='formatted', file='output/zdp_chem')
+            open(unit_dts,       form='formatted', file='output/datasheet')
+            open(unit_reac_chem, form='formatted', file='output/reactions_chem')
+            open(unit_mtrx_chem, form='formatted', file='output/matrix_chem')
+            open(unit_reac_zdp,  form='formatted', file='output/reactions_zdp')
+            open(unit_mtrx_zdp,  form='formatted', file='output/matrix_zdp')
       end subroutine open_units
 
       subroutine write_header_datasheet(ksym)
@@ -87,6 +95,49 @@ module zdp_chem
                                density_all, density_ele, x
       end subroutine write_datasheet
 
+
+      subroutine write_matrix_chem()
+
+            write(unit_mtrx_chem, *) 'chemkin matrix'
+
+      end subroutine write_matrix_chem
+
+      subroutine write_reactions_chem_header()
+
+            write(unit_reac_chem, *) 'header of chemkin reaction'
+
+      end subroutine write_reactions_chem_header
+
+      subroutine write_reactions_chem(time, z)
+            real(8), intent(in)  :: time
+            real(8), intent(in) :: z(num_spec+1)
+
+            write(unit_reac_chem, *) time, 'chemkin reaction rate'
+
+      end subroutine write_reactions_chem
+      
+
+      subroutine write_matrix_zdp()
+            
+            write(unit_mtrx_zdp, *) 'zdplaskin matrix'
+
+      end subroutine write_matrix_zdp
+
+      subroutine write_reactions_zdp_header()
+
+            write(unit_reac_zdp, *) 'header of zdplaskin reaction'
+
+      end subroutine write_reactions_zdp_header
+
+      subroutine write_reactions_zdp(time, z)
+            real(8), intent(in)  :: time
+            real(8), intent(in) :: z(num_spec+1)
+
+            write(unit_reac_zdp, *) time, 'zdplaskin reaction rate'
+
+      end subroutine write_reactions_zdp
+
+
       subroutine calc_reduced_field(time)
             real(8), intent(in)  :: time
       
@@ -111,6 +162,12 @@ program test_main
       call ZDPlasKin_init()
       
       call open_units()
+
+      !   ------- export reaction coefficients ---------
+
+      call write_matrix_chem()
+      
+      call write_matrix_zdp()
       
       !   ------- chemistry section ---------
 

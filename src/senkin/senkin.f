@@ -434,7 +434,10 @@ C
 C  This module directs the integration for cases 1-3, where temperature
 C  is not known and the energy equation is included.
 C
-      use zdp_chem, only: write_header_datasheet, write_datasheet
+      use zdp_chem, only: write_header_datasheet, write_datasheet,
+     1      write_reactions_chem_header, write_reactions_chem,
+     2      write_reactions_zdp_header, write_reactions_zdp
+
 C*****precision > double
       IMPLICIT DOUBLE PRECISION (A-H, O-Z), INTEGER (I-N)
 C*****END precision > double
@@ -514,8 +517,15 @@ C     WRITE (LDTS, 7720)
 C     WRITE (LDTS, *) (KSYM(I), I = 1, KK)
 C     CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
 C    1             P, PATM, RPAR, TIM, XMOL, Z)
+
       call write_header_datasheet(KSYM)
       call write_datasheet(TIM, Z)
+      
+      call write_reactions_chem_header()
+      call write_reactions_chem(TIM, Z)
+
+      call write_reactions_zdp_header()
+      call write_reactions_zdp(TIM, Z)
 
  7720 FORMAT(/,' t(sec)     P(atm)     T(K)    ', $)
 C
@@ -580,6 +590,8 @@ C    1                P, PATM, RPAR, TIM, XMOL, Z)
 C        CALL TEXT13DTS (IPAR, KK, KSYM, LDTS,
 C    1                P, PATM, RPAR, TIM, XMOL, Z)
          call write_datasheet(TIM, Z)
+         call write_reactions_chem(TIM, Z)
+         call write_reactions_zdp(TIM, Z)
          TLASTP = TIM
          TPRINT = TPRINT + DTOUT
 C
